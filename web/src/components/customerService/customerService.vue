@@ -7,6 +7,7 @@
         <serverCall
         :show='show'
         @openMsg='openMsg'></serverCall>
+        <appFooter></appFooter>
     </div>
 </template>
 
@@ -14,6 +15,7 @@
 import serverHeader from './serverHeader'
 import question from './question'
 import serverCall from './serverCall'
+import appFooter from './../appFooter'
 export default {
     data(){
         return{
@@ -103,7 +105,8 @@ export default {
     components:{
         serverCall,
         question,
-        serverHeader
+        serverHeader,
+        appFooter
     },
     methods:{
         openMsg() {
@@ -127,7 +130,8 @@ export default {
 <style lang='scss'>
 .customer-service{
     position: relative;
-    padding: 2rem 0;
+    padding-top: 2rem;
+    min-height: 100vh;
     background-color: rgb(247, 247, 247);
     color: #333;       
 }

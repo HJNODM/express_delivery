@@ -1,18 +1,18 @@
 var mongoose = require('./ds');
 
 var userSchema = new mongoose.Schema({
-  userId:{type:String,indx:true},//注册账号
-  userName:String,//名字
-  passWord:String,//密码
-  phoneNum:String,//联系电话
-  address:String,//地址
-  lastLoginTime:String,//上次登录时间
-  loginTime:String,//登录时间
-  regDate:String,//注册时间
-  passwordQuestion:String,//密保问题
-  questionAnswer:String,//密保答案
-  gender:{type:Number,default:1},//性别 默认1男 0女
-  grade:{type:Number,default:0},//等级 默认0 普通用户
+  userId : {type:String,indx:true},//注册账号
+  userName : String,//名字
+  passWord : String,//密码
+  phoneNum : String,//联系电话
+  address : String,//地址
+  lastLoginTime : String,//上次登录时间
+  loginTime : String,//登录时间
+  regDate : String,//注册时间
+  passwordQuestion : String,//密保问题
+  questionAnswer : String,//密保答案
+  gender : {type:Number,default:1},//性别 默认1男 0女
+  grade : {type:Number,default:0},//等级 默认0 普通用户
   messages:[
     {
       title:{type:String,default:'欢迎新用户'},

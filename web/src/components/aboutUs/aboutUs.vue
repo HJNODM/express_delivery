@@ -84,6 +84,9 @@ export default {
 <style  lang='scss'>
 .aboutUs{
     position: relative;
+    P{
+        text-indent: 2rem;
+    }
 }
 .abt-header{
     position: relative;
@@ -95,7 +98,5 @@ export default {
     }
 
 }
-P{
-    text-indent: 2rem;
-}
+
 </style>

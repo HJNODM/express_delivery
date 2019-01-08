@@ -125,6 +125,10 @@ export default {
     .el-collapse-item__header.is-active{
         border-bottom-color: #ebeef5;
     }
+    //下划线
+    .el-collapse-item__header{
+        border-bottom: 1px solid #e2e2e2;
+    }
     // 标题框
     .el-collapse-item__header{
         font-size: 0.8rem;

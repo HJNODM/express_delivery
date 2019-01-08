@@ -35,8 +35,10 @@ export default {
                     icon:'el-icon-location',
                     title:'个人中心',
                     menuItem:[
-                        {route:'userInformation',listTitle:'我的信息'},
+                        {route:'userInformation',listTitle:'我的信息'}, 
+                        {route:'changePassword',listTitle:'修改密码'},
                         {route:'addInformation',listTitle:'完善个人信息'}
+                       
                     ]
                 },
                 {
@@ -105,6 +107,7 @@ export default {
 .person-user{
     position: relative;
     width: 100%;
+    min-height: 100vh;
     background-color: #f7f7f7;
 }
 .person-user-body{
@@ -132,6 +135,9 @@ export default {
 @media only screen and (max-width:1200px){
     .person-user-body{
         width: 90%;
+    }
+    .pserson-router-cont{
+        min-height: 45rem;
     }
 }
 @media only screen and (max-width:992px){

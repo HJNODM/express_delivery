@@ -85,9 +85,9 @@ export default {
                     { required: true, message: '请输入密码', trigger: 'blur' }
                 ],
                 validateCode:[
-                    { required: true, message: '请输入验证码', trigger: 'blur' },
-                    { validator: validateCode , trigger: 'blur'},
-                    { validator: validateCode , trigger: 'change'}                   
+                    // { required: true, message: '请输入验证码', trigger: 'blur' },
+                    // { validator: validateCode , trigger: 'blur'},
+                    // { validator: validateCode , trigger: 'change'}                   
                 ]
             },
             validateCodeImg:[
@@ -165,6 +165,9 @@ export default {
         resetForm(formName) {
             this.$refs[formName].resetFields();
         }
+    },
+    destroyed() {
+       window.onkeydown = null;
     }
  
 }

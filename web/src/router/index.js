@@ -2,8 +2,8 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 //异步路由
-import {loginRegister ,login ,register ,forgotPassword ,
-  appHeader ,appHome ,aboutUs ,customerService ,suggest } from './publicRouter'
+import {loginRegister ,login ,register ,forgotPassword ,changePassword,
+  appHeader ,appHome ,aboutUs ,customerService ,suggest ,notFound} from './publicRouter'
 
 import {userPage ,userInformation ,addInformation ,
   currentOrder ,joinUs ,newOrder ,historyOrder ,myMessage } from './userRouter'
@@ -101,7 +101,11 @@ export default new Router({
         },
         {
           path:'addInformation',
-          component:addInformation 
+          component:addInformation  
+        },
+        {
+          path:'changePassword',
+          component:changePassword 
         },
         {
           path:'currentOrder',
@@ -139,6 +143,10 @@ export default new Router({
         {
           path:'userInformation',
           component:userInformation  
+        },
+        {
+          path:'changePassword',
+          component:changePassword 
         },
         {
           path:'wokerAccount',
@@ -243,6 +251,11 @@ export default new Router({
         default:suggest,
         header:appHeader
       }
+    },
+    {
+      path: '*',
+      name:'notFound',
+      component:notFound
     }
   ]
 })

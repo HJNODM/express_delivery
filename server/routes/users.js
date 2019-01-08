@@ -101,7 +101,7 @@ router.post('/login', (req, res, next)=> {
         errTip(res);
       }else{
           if(!doc){
-            errTip(res,'用户不存在');
+            errTip(res,'用户不存在或密码不正确!');
             return
           }
           //cookie不安全,可以篡改 所以用session
@@ -552,7 +552,7 @@ router.get('/userMessage', (req, res, next)=> {
               res.json({
                 status:"0",
                 msg:'',
-                result:doc.messages
+                result:doc.messages.reverse()
               }) 
           }              
       });

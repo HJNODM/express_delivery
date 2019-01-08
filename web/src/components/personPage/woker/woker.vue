@@ -35,6 +35,7 @@ export default {
                     title:'个人中心',
                     menuItem:[
                         {route:'userInformation',listTitle:'我的信息'},
+                         {route:'changePassword',listTitle:'修改密码'},
                         {route:'wokerAccount',listTitle:'我的钱包'}
                     ]
                 },
@@ -76,8 +77,15 @@ export default {
             axios.get("/users/checkLogin").then((response)=>{
                     let res = response.data;
                     loading.close();
-                    if(res.status=="0"){
-
+                    if(res.status==="0"){
+                        if(Number.parseInt(res.result.grade) !==1){
+                            this.$message({
+                                message: '用户权限不够!',
+                                type: 'error',
+                                showClose:true
+                            });
+                            this.$router.push({ path: '/person' });
+                        }
                     }else{
                         this.$message({
                             message: '当前未登录!',
@@ -129,6 +137,9 @@ export default {
 @media only screen and (max-width:1200px){
     .person-woker-body{
         width: 90%;
+    }
+    .woker-router-cont{
+        min-height: 45rem;
     }
 }
 @media only screen and (max-width:992px){
