@@ -26,7 +26,7 @@ export default {
 .copyRight{
     position: relative;
     width: 100%;
-    padding-bottom: 1.2rem;
+    padding-bottom: 5rem;
     p{
         color: #666;
         font-size: 0.7rem;

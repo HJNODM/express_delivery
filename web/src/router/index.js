@@ -6,7 +6,7 @@ import {loginRegister ,login ,register ,forgotPassword ,changePassword,
   appHeader ,appHome ,aboutUs ,customerService ,suggest ,notFound} from './publicRouter'
 
 import {userPage ,userInformation ,addInformation ,
-  currentOrder ,joinUs ,newOrder ,historyOrder ,myMessage } from './userRouter'
+  currentOrder ,joinUs ,newOrder ,historyOrder ,myMessage ,findOrder} from './userRouter'
 
 import {wokerPage ,wokerAccount ,wokerReceivedOrder ,
   wokerHistoryOrder ,allUserOrderList } from './wokerRouter'
@@ -105,7 +105,7 @@ export default new Router({
         },
         {
           path:'changePassword',
-          component:changePassword 
+          component:changePassword
         },
         {
           path:'currentOrder',
@@ -113,11 +113,18 @@ export default new Router({
         },
         {
           path:'newOrder',
-          component:newOrder
+          component:newOrder,
+          meta: {
+            keepAlive: true 
+          } 
         },
         {
           path:'historyOrder',
           component:historyOrder
+        },
+        {
+          path:'findOrder',
+          component:findOrder
         },
         {
           path:'myMessage',

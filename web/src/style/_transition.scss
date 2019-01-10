@@ -45,6 +45,14 @@
 .opa-mini-enter-active{
   @include transition(.6s); 
 }
+.opa-keep-enter{
+    @include set-opacity(0);
+}
+.opa-keep-enter-active{ //解决keep-alive 闪动问题
+    position: absolute;
+    width: 100%; 
+    @include transition(.6s); 
+}
 
 .moveX-enter-active,
 .moveX-leave-active{

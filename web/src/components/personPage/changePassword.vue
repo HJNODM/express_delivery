@@ -2,27 +2,27 @@
     <div class="changePassword-page">
         <person-title>当前位置 :: 个人中心 >> <em>修改密码</em></person-title>
         <div class="changePassword-cont">
-            <div class="from-cont">
+            <div class="form-cont">
                 <div class="password-input">
-                    <el-input v-model="passwordFrom.oldPassword" :type='inputType' 
+                    <el-input v-model="passwordform.oldPassword" :type='inputType' 
                         placeholder="原密码"></el-input>
                     <i class="toggle el-icon-view"
-                        :class="{'color':passwordFrom.oldPassword ===''}"
+                        :class="{'color':passwordform.oldPassword ===''}"
                         @click="changeInputType"></i>
                 </div>
                 <div class="password-input">
-                    <el-input v-model="passwordFrom.newPassword" :type='inputType'  
+                    <el-input v-model="passwordform.newPassword" :type='inputType'  
                         placeholder="新密码"></el-input>
                     <i class="toggle el-icon-view"
-                        :class="{'color':passwordFrom.oldPassword ===''}"
+                        :class="{'color':passwordform.oldPassword ===''}"
                         @click="changeInputType"></i>
                 </div>
                 <div class="password-input">
-                    <el-input v-model="passwordFrom.agNewPassword" :type='inputType' 
+                    <el-input v-model="passwordform.agNewPassword" :type='inputType' 
                         @keydown="handleChangePassword"
                         placeholder="再次输入新密码"></el-input>
                     <i class="toggle el-icon-view"
-                        :class="{'color':passwordFrom.oldPassword ===''}"
+                        :class="{'color':passwordform.oldPassword ===''}"
                         @click="changeInputType"></i>
                 </div>
                 <el-button class="change" 
@@ -34,11 +34,13 @@
 </template>
 
 <script>
+import AES from 'aes-js'
+import axios from 'axios'
 export default {
     data(){
         return{
             inputType:'password',
-            passwordFrom : {
+            passwordform : {
                 oldPassword : '',
                 newPassword : '',
                 agNewPassword : ''
@@ -54,26 +56,58 @@ export default {
         }
     },
     methods: {
-        testFrom(){
-            let from = this.passwordFrom;
-            return (from.oldPassword === "") && '原密码不能为空!' ||
-                    (from.newPassword === "") && '新密码不能为空!' ||
-                    (from.agNewPassword === "") && '请再次输入新密码!' ||
-                    (from.agNewPassword !== from.newPassword) && '两次密码不一样!' || '';
+        testform(){
+            let form = this.passwordform;
+            return (form.oldPassword === "") && '原密码不能为空!' ||
+                    (form.newPassword === "") && '新密码不能为空!' ||
+                    (form.newPassword.length < 6) && '密码不能少于6位!' ||
+                    (form.agNewPassword === "") && '请再次输入新密码!' ||
+                    (form.agNewPassword !== form.newPassword) && '两次密码不一样!' || '';
         },
         changeInputType(){
             this.inputType=(this.inputType=='password')?'text':'password';
         },
         handleChangePassword(){
-            let tip = this.testFrom();
+            let tip = this.testform();
             if(tip === ''){
-                axios.post(router,data).then(response=>{
+                const key = [4, 9, 16, 14, 3, 6, 2, 8, 4, 5, 8, 2, 7, 9, 4, 5],
+                      pwd = this.passwordform.newPassword,
+                      pwdBytes = AES.utils.utf8.toBytes(pwd),
+                      aesCtr = new AES.ModeOfOperation.ctr(key, new AES.Counter(5)),
+                      encryptedBytes = aesCtr.encrypt(pwdBytes),
+                      encryptPwd = AES.utils.hex.fromBytes(encryptedBytes),
+                      postData ={
+                        "oldPassword" : this.passwordform.oldPassword,
+                        "newPassword" : encryptPwd
+                      };
+
+                axios.post('/users/changePassword',postData).then(response=>{
                     let res = response.data; 
                     if(res.status=='0'){
-                
+                        this.$message({
+                            message: '修改成功!',
+                            type: 'success',
+                            showClose : true
+                        });
+                        this.$router.push({path:'/login'});
+                        axios.post("/users/logout").then((response)=>{
+                                let res = response.data;
+                                if(res.status=="0"){
+                                    this.$store.commit("saveUserInfo",{userId:'',userName:''});
+                                   // console.log('退出成功');   
+                                }else{
+                                console.log(res.msg);                      
+                                }
+                        }).catch(err=>{
+                            console.log(err);
+                        })
                     }else{
-                
-                     }
+                       this.$message({
+                            message: res.msg,
+                            type: 'error',
+                            showClose : true
+                        });
+                    }
                 }).catch(err=>{
                     console.log(err);
                  }); 
@@ -107,7 +141,7 @@ export default {
         margin-top: 1.5rem;
     }
 }
-.from-cont{
+.form-cont{
     .password-input{
         position: relative;
     }
@@ -116,12 +150,17 @@ export default {
         width: 1.5rem;
         height: 1.5rem;
         line-height: 1.5rem;
-        top: 40%;
+        top: 35%;
         transform: translate(0,-50%);
         right: 0.2rem;
     }
     .toggle.color{
             color: #ccc;
+    }
+}
+@media only screen and (max-width:768px){
+    .changePassword-cont{
+        width: 70%;
     }
 }
 </style>

@@ -69,7 +69,7 @@
     :prop="item.prop">
     </el-table-column>
     <el-table-column  align="right">
-         <template slot="header" slot-scope="scope">
+         <template slot="header" cope="scope">
             <el-input
             v-model="search"
             size="mini"
@@ -114,16 +114,15 @@ export default {
             noCompBtn:Boolean
         },
         titleList:{
-                id: Number ,
-                columnTitle: String,
-                prop: String,
-                sortable:Boolean
+            id: Number ,
+            columnTitle: String,
+            prop: String,
+            sortable:Boolean
         }
         
     },
     data(){
         return{
-            isnoCompBtn:this.listType.noCompBtn,
             tabletitleList:this.titleList,
             search:''
         }
@@ -135,6 +134,9 @@ export default {
                     || data.goodsTpye.toString().includes(this.search)
                     || data.company.toString().includes(this.search)
                     || data.orderId.toString().includes(this.search));
+        },
+        isnoCompBtn(){
+            return this.listType.noCompBtn
         }
     },
     methods:{

@@ -54,6 +54,9 @@
 .el-table__expanded-cell[class*=cell]{
     padding: 1rem 2.5rem;
 }
+.el-table__expanded-cell:hover{
+    background-color: #fff !important;
+}
 .el-table th, .el-table tr{
     background-color: #e7f2fb;
 }
@@ -337,9 +340,6 @@
     font-size: 0.7rem;
 }
 @media only screen and (max-width:1200px){
-    .newOrder .el-form--label-left .el-form-item__label{
-        width: 10rem !important;
-    }
     .newOrder .el-form-item__content{
         margin-left: 10rem !important;
     }

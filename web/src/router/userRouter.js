@@ -4,8 +4,9 @@ const userPage = resolve => require(['@ctsPage/user/user'], resolve),
     currentOrder = resolve => require(['@ctsPage/user/currentOrder'], resolve),
     joinUs = resolve => require(['@ctsPage/user/joinUs'], resolve),
     newOrder = resolve => require(['@ctsPage/user/newOrder'], resolve),
+    findOrder = resolve => require(['@ctsPage/user/findOrder'], resolve),
     historyOrder = resolve => require(['@ctsPage/user/historyOrder'], resolve),
     myMessage = resolve => require(['@ctsPage/myMessage'], resolve);
 
 export {userPage ,userInformation ,addInformation ,
-        currentOrder ,joinUs ,newOrder ,historyOrder ,myMessage }
+        currentOrder ,joinUs ,newOrder ,historyOrder ,myMessage ,findOrder}

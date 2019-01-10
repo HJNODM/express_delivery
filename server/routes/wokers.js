@@ -80,6 +80,10 @@ router.post('/cashWithDraw', (req, res, next)=> {
 
 //工作人员 接单大厅 所有普通用户的未接订单           
 router.get('/allUserOrder', (req, res, next)=> {
+    let orderData = {
+        currentPage : Number.parseInt(req.query.page),
+        pageSize : Number.parseInt(req.query.size)
+    }
     User.find({},(err,doc)=>{
          if(err){
            errTip(res);
@@ -94,10 +98,15 @@ router.get('/allUserOrder', (req, res, next)=> {
                  var arr = item.userOrderList.filter(it=>it.orderState=='未接单');
                  arr.length && (orderList=[...orderList,...arr]);
              })
+            let start = orderData.pageSize * (orderData.currentPage-1);
+            let notReceiveOrder = orderList.slice(start,start+orderData.pageSize);
              res.json({
                status:"0",
                msg:'',
-               result:orderList
+               result:{
+                notReceiveOrder : notReceiveOrder,
+                totalOrder : orderList.length
+               }
              }); 
          }              
      });

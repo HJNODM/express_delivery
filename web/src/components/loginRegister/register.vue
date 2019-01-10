@@ -37,8 +37,11 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item  label="密保答案" prop="questionAnswer">
-                    <el-input v-model="registerForm.questionAnswer"
+                    <el-input v-model="registerForm.questionAnswer" :type='inputType' 
                     placeholder="请输入密保答案"></el-input>
+                    <i class="toggle el-icon-view"
+                    :class="{'color':registerForm.agPassword==''}"
+                    @click="changeInputType"></i>
                 </el-form-item>
             </el-form> 
         </div>
@@ -57,6 +60,7 @@
 
 <script>
 import  axios from 'axios'
+import AES  from 'aes-js'
 export default {
   data(){
         let againPassword =(rule, value, callback) => {
@@ -137,11 +141,18 @@ export default {
         submitForm(formName) {
             this.$refs[formName].validate((valid) => {
             if (valid) {
+                const key = [9, 6, 13, 11, 7, 6, 2, 8, 4, 6, 8, 2, 7, 4, 9, 3],
+                      pwd = this.registerForm.passWord,
+                      pwdBytes = AES.utils.utf8.toBytes(pwd),
+                      aesCtr = new AES.ModeOfOperation.ctr(key, new AES.Counter(5)),
+                      encryptedBytes = aesCtr.encrypt(pwdBytes),
+                      encryptPwd = AES.utils.hex.fromBytes(encryptedBytes);
+
                 axios.post('/users/register',{
-                    userId:this.registerForm.userId,
-                    passWord:this.registerForm.passWord,
-                    passwordQuestion:this.registerForm.passwordQuestion,
-                    questionAnswer:this.registerForm.questionAnswer
+                    userId : this.registerForm.userId,
+                    passWord : encryptPwd,
+                    passwordQuestion : this.registerForm.passwordQuestion,
+                    questionAnswer : this.registerForm.questionAnswer
                 }).then(response=>{
                     let res = response.data;
                     if(res.status=='0'){

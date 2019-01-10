@@ -22,10 +22,18 @@
                     :class="{'color':loginForm.passWord==''}"
                     @click="changeInputType"></i>
                 </el-form-item>
-                <el-form-item  label="验证码" class="code" prop="validateCode">
-                    <el-input 
-                    v-model.trim="loginForm.validateCode"
-                    placeholder="请输入验证码"></el-input>
+                <el-form-item  label="验证码" 
+                    class="code" prop="validateCode">
+                    <label>
+                        <el-input :disabled='disabled'
+                        v-model.trim="loginForm.validateCode">
+                        </el-input>
+                        <ul class="ul-code" @click="handleEditCode">
+                            <li class="square"></li>  <li class="square"></li> 
+                            <li class="square"></li>  <li class="square"></li>
+                            <li class="square"></li>  <li class="square"></li>
+                        </ul>
+                    </label>
                 </el-form-item>
                 <div class="rightCode">
                     <div class="rightCode-cont" @click="handlechangeImg">
@@ -57,6 +65,7 @@
 
 <script>
 import axios from 'axios'
+import AES from 'aes-js'
 export default {
   data(){
         let validateCode =(rule, value, callback) => {
@@ -67,6 +76,7 @@ export default {
             }
         };
         return{
+            disabled : false,
             inputType:'password',
             randomCode:'',
             codeImg:'',
@@ -98,6 +108,13 @@ export default {
             ]
         }
     },
+    watch: {
+        "loginForm.validateCode": function(newVal){
+            if(newVal.length >=6){
+                this.disabled = true;
+            }
+        }
+    },
     mounted() {
         this.randomCode=this.randomNum();
         this.codeImg=this.randomCodeimg();
@@ -109,6 +126,13 @@ export default {
         }
     },
     methods: {
+        handleEditCode(){
+            let code = this.loginForm.validateCode;
+            if(this.disabled){
+                this.loginForm.validateCode = code.slice(0,-1);
+            }
+            this.disabled = false;
+        },
         randomNum(){
             return Math.random().toString(16).slice(-6);
         },
@@ -148,13 +172,17 @@ export default {
         submitForm(formName) {
             this.$refs[formName].validate((valid) => {
             if (valid) {
-                let userPost = {
-                    userId:this.loginForm.userId,
-                    passWord:this.loginForm.passWord,
-                    grade:this.loginForm.grade
+                const key = [6, 9, 16, 11, 3, 6, 2, 3, 4, 2, 8, 2, 5, 9, 8, 2],
+                      pwd = this.loginForm.passWord,
+                      pwdBytes = AES.utils.utf8.toBytes(pwd),
+                      aesCtr = new AES.ModeOfOperation.ctr(key, new AES.Counter(5)),
+                      encryptedBytes = aesCtr.encrypt(pwdBytes),
+                      encryptPwd = AES.utils.hex.fromBytes(encryptedBytes);
+                const userPost = {
+                    userId : this.loginForm.userId,
+                    passWord : encryptPwd,
+                    grade : this.loginForm.grade
                 };
-                //判断用户级别  这样做是因为用的mongodb数据库,
-                //分了普通用户和工作人员两个集合,如果用一个集合数据就会太混乱
                 this.userLogin('/users/login',userPost);
             } else {
                 console.log('error submit!!');
@@ -199,6 +227,26 @@ export default {
             margin-bottom: 1rem;
             &.grade{
                 margin-bottom: 0.3rem;
+            }
+        }
+        .code{
+            .el-input__inner{
+                outline: none;
+                border: none;
+                letter-spacing: 2.4rem;
+                text-indent: 0.3rem;
+            }
+            .ul-code{
+                position: absolute;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                display: flex;
+                justify-content: space-between;
+                .square{
+                    width: 14%;
+                    border: 1px solid #ccc;
+                }
             }
         }
         .rightCode{
@@ -252,7 +300,41 @@ export default {
         }
     }
 }
+@media only screen and (max-width:1500px){
+    .right-login-body .form-cont .code .el-input__inner{
+        letter-spacing: 2.35rem;
+    }
+}
+@media only screen and (max-width:1400px){
+    .right-login-body .form-cont .code .el-input__inner{
+        letter-spacing: 2.25rem;
+    }
+}
+@media only screen and (max-width:1200px){
+    .right-login-body .form-cont .code .el-input__inner{
+        letter-spacing: 1.90rem;
+    }
+}
+@media only screen and (max-width:1100px){
+    .right-login-body .form-cont .code .el-input__inner{
+        letter-spacing: 1.70rem;
+    }
+}
+@media only screen and (max-width:990px){
+    .right-login-body .form-cont .code .el-input__inner{
+        letter-spacing: 2.20rem;
+    }
+}
+@media only screen and (max-width:900px){
+    .right-login-body .form-cont .code .el-input__inner{
+        letter-spacing: 1.70rem;
+    }
+}
 @media only screen and (max-width:768px){
+    .right-login-body .form-cont .code .el-input__inner{
+        letter-spacing: 5.50rem;
+        font-size: 2rem;
+    }
     .right-login-body .form-cont .rightCode{
         margin-top: 1rem;
         margin-bottom: 1rem;
@@ -264,6 +346,21 @@ export default {
                 font-size: 3rem;
             }
         }
+    }
+}
+@media only screen and (max-width:700px){
+    .right-login-body .form-cont .code .el-input__inner{
+        letter-spacing: 5.00rem;
+    }
+}
+@media only screen and (max-width:650px){
+    .right-login-body .form-cont .code .el-input__inner{
+        letter-spacing: 4.50rem;
+    }
+}
+@media only screen and (max-width:600px){
+    .right-login-body .form-cont .code .el-input__inner{
+        letter-spacing: 3.50rem;
     }
 }
 </style>

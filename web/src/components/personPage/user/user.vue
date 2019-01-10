@@ -9,8 +9,13 @@
             </div>
             <div class="pserson-router-cont" 
             :class="{'isCollapse-w':isCollapse}">
-                <transition name='opa-mini'>
-                    <router-view></router-view>
+                <transition name='opa-keep' mode="in-out">
+                    <keep-alive>
+                        <router-view v-if="$route.meta.keepAlive"></router-view>
+                    </keep-alive>
+                </transition> 
+                <transition name='opa-mini' mode="out-in">
+                    <router-view v-if="!$route.meta.keepAlive"></router-view>
                 </transition> 
             </div>
         </div>
@@ -48,7 +53,8 @@ export default {
                     menuItem:[
                         {route:'currentOrder',listTitle:'当前订单'},
                         {route:'newOrder',listTitle:'发布订单'},
-                        {route:'historyOrder',listTitle:'历史订单'}
+                        {route:'historyOrder',listTitle:'历史订单'},
+                        {route:'findOrder',listTitle:'查找订单'}
                     ]
                 },
                 {
@@ -120,6 +126,7 @@ export default {
     background-color: #fff;
 }
 .pserson-router-cont{
+    position: relative;
     width: 100%;
     width:  calc(100% - 10.1rem);
     min-height: 35rem;
@@ -128,9 +135,17 @@ export default {
     border-top: none;
     transition: all .5s;
     background-color: darken(#f4f9fd, 0%) ;
+    padding-bottom: 3rem;
 }
 .isCollapse-w{
     width:  calc(100% - 3.3rem);
+}
+.pageination-oder{  //订单页中的分页样式
+    position: absolute;
+    bottom: 0.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: 2rem;
 }
 @media only screen and (max-width:1200px){
     .person-user-body{

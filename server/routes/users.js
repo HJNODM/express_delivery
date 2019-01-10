@@ -1,7 +1,8 @@
-var express = require('express');
-var router = express.Router();
-var User = require('./../models/user');
-var Woker = require('./../models/woker');
+let express = require('express');
+let router = express.Router();
+let User = require('./../models/user');
+let Woker = require('./../models/woker');
+let AES = require('aes-js');
 require('./../public/js/dateInit')
 function errTip(res,errmsg=err.message){
     res.json({
@@ -44,14 +45,21 @@ router.get('/userExistence', (req, res, next)=> {
 
 // 注册
 router.post('/register', (req, res, next)=> {
-    let regDate = new Date().Format('yyyy-MM-dd hh:mm:ss');
+    const regDate = new Date().Format('yyyy-MM-dd hh:mm:ss');
+
+    const key = [9, 6, 13, 11, 7, 6, 2, 8, 4, 6, 8, 2, 7, 4, 9, 3];
+    const encryptedBytes = AES.utils.hex.toBytes(req.body.passWord);
+    const aesCtr = new AES.ModeOfOperation.ctr(key, new AES.Counter(5));
+    const decryptedBytes = aesCtr.decrypt(encryptedBytes);
+    const passWord = AES.utils.utf8.fromBytes(decryptedBytes);
+
     let param = {
-      userId:req.body.userId,
-      phoneNum:req.body.userId,
-      passWord:req.body.passWord,
-      regDate:regDate,
-      passwordQuestion:req.body.passwordQuestion,
-      questionAnswer:req.body.questionAnswer
+      userId : req.body.userId,
+      phoneNum : req.body.userId,
+      passWord : passWord,
+      regDate : regDate,
+      passwordQuestion : req.body.passwordQuestion,
+      questionAnswer : req.body.questionAnswer
      }
   User.findOne({userId:param.userId},(err,doc)=>{
         if(err){
@@ -61,7 +69,7 @@ router.post('/register', (req, res, next)=> {
               errTip(res,'用户已存在');
               return
             }
-            var user = new User(param);
+            let user = new User(param);
             let message ={
                 "title" : `欢迎新用户(${regDate})`, 
                 "cont" : `您在 ${regDate} 注册本账号,
@@ -89,13 +97,20 @@ router.post('/register', (req, res, next)=> {
 
 //登录
 router.post('/login', (req, res, next)=> {
-  let loginTime = new Date().Format('yyyy-MM-dd hh:mm:ss');
-  var param = {
-    userId:req.body.userId,
-    passWord:req.body.passWord,
-    grade:req.body.grade
+  const loginTime = new Date().Format('yyyy-MM-dd hh:mm:ss');
+  //解密
+  const key = [6, 9, 16, 11, 3, 6, 2, 3, 4, 2, 8, 2, 5, 9, 8, 2];
+  const encryptedBytes = AES.utils.hex.toBytes(req.body.passWord);
+  const aesCtr = new AES.ModeOfOperation.ctr(key, new AES.Counter(5));
+  const decryptedBytes = aesCtr.decrypt(encryptedBytes);
+  const passWord = AES.utils.utf8.fromBytes(decryptedBytes);
+
+  const param = {
+    userId : req.body.userId,
+    passWord : passWord,
+    grade : req.body.grade
   }
-  var Who = userGrade(param.grade);
+  let Who = userGrade(param.grade);
   Who.findOne(param,(err,doc)=>{
       if(err){
         errTip(res);
@@ -164,7 +179,7 @@ router.get("/checkLogin", function (req,res,next) {
 
 //退出
 router.post("/logout", function (req,res,next) {
-  var Who = userGrade(req.session.grade);
+  let Who = userGrade(req.session.grade);
   Who.findOne({userId:req.session.userId},(err,doc)=>{
     if(err){
       errTip(res);
@@ -191,13 +206,13 @@ router.post("/logout", function (req,res,next) {
 
 //找回密码
 router.post('/forgotPassWord', (req, res, next)=> {
-  var param = {
+  let param = {
       userId:req.body.userId,
       passwordQuestion:req.body.passwordQuestion,
       questionAnswer:req.body.questionAnswer,
       grade:req.body.grade
   }
-  var Who = userGrade(param.grade);
+  let Who = userGrade(param.grade);
   Who.findOne(param,(err,doc)=>{
       if(err){
         errTip(res);
@@ -222,7 +237,7 @@ router.get('/userInformation', (req, res, next)=> {
    let userId = req.session.userId,
       grade = req.session.grade,
       orderList = Number.parseInt(grade)==0?'userOrderList':'wokerOrderList';
-  var Who = userGrade(grade);
+  let Who = userGrade(grade);
   Who.findOne({userId:userId},(err,doc)=>{
         if(err){
           errTip(res);
@@ -254,7 +269,7 @@ router.get('/userInformation', (req, res, next)=> {
 //用户信息中 修改联系电话 
 router.get('/userInformation/ChangePhone', (req, res, next)=> {
   let phoneNum = req.query.phoneNum;
-  var Who = userGrade(req.session.grade);
+  let Who = userGrade(req.session.grade);
   Who.update({userId:req.session.userId},{phoneNum:phoneNum},(err,doc)=>{
        if(err){
          errTip(res);
@@ -271,7 +286,7 @@ router.get('/userInformation/ChangePhone', (req, res, next)=> {
 //用户信息中 修改联系地址
 router.get('/userInformation/ChangeAddress', (req, res, next)=> {
   let newAddress = req.query.newAddress;
-  var Who = userGrade(req.session.grade);
+  let Who = userGrade(req.session.grade);
   Who.update({userId:req.session.userId},{address:newAddress},(err,doc)=>{
        if(err){
          errTip(res);
@@ -285,9 +300,45 @@ router.get('/userInformation/ChangeAddress', (req, res, next)=> {
    });
 });
 
+//个人中心  修改密码
+router.post('/changePassword', (req, res, next)=> {
+  let param = {
+    oldPassword : req.body.oldPassword,
+    newPassword : req.body.newPassword
+  }
+  const Who = userGrade(req.session.grade);
+  const key = [4, 9, 16, 14, 3, 6, 2, 8, 4, 5, 8, 2, 7, 9, 4, 5];
+  const encryptedBytes = AES.utils.hex.toBytes(param.newPassword);
+  const aesCtr = new AES.ModeOfOperation.ctr(key, new AES.Counter(5));
+  const decryptedBytes = aesCtr.decrypt(encryptedBytes);
+  const passWord = AES.utils.utf8.fromBytes(decryptedBytes);
+  
+  Who.findOne({userId:req.session.userId, passWord:param.oldPassword},(err,doc)=>{
+      if(err){
+        return errTip(res);
+      }
+      if(!doc){
+        return errTip(res,'账号不存在,或原密码不正确!');
+      }
+      doc.passWord = passWord;
+      doc.save((err1,doc1)=>{
+        if(err1){
+          errTip(res,'储存密码时错误! 请重试');
+        }else{
+          res.json({
+            status:"0",
+            msg:'',
+            result : ''
+          }) ;
+        }
+      })
+      
+  });
+});
+
 //完善或者更新个人信息
 router.post('/addInformation', (req, res, next)=> {
-  var param = {
+  let param = {
     userName:req.body.userName,
     phoneNum:req.body.phoneNum,
     gender:req.body.gender,
@@ -365,6 +416,10 @@ router.post('/newOrder', (req, res, next)=> {
 
 //用户未完成订单(当前订单)
 router.get('/userCurrentOrder', (req, res, next)=> {
+   let order = {
+      currentPage : Number.parseInt(req.query.page),
+      pageSize : Number.parseInt(req.query.size)
+   }
    User.findOne({userId:req.session.userId},(err,doc)=>{
        if(err){
          errTip(res);
@@ -374,10 +429,15 @@ router.get('/userCurrentOrder', (req, res, next)=> {
              return
            }
            let orderList = doc.userOrderList.filter(it=>it.orderState!='已完成');
+           let start = order.pageSize * (order.currentPage-1);
+           let currentOrder = orderList.slice(start,start+order.pageSize);
            res.json({
              status:"0",
              msg:'',
-             result:orderList
+             result:{
+               orderList : currentOrder,
+               totalOrder : orderList.length
+             }
            }) 
        }              
    });
@@ -490,6 +550,10 @@ router.post('/completedCurrentOrder', (req, res, next)=> {
 
 //用户已完成订单(历史订单)
 router.get('/historyOrder', (req, res, next)=> {
+  let order = {
+      currentPage : Number.parseInt(req.query.page),
+      pageSize : Number.parseInt(req.query.size)
+  }
   User.findOne({userId:req.session.userId},(err,doc)=>{
       if(err){
         errTip(res);
@@ -499,10 +563,15 @@ router.get('/historyOrder', (req, res, next)=> {
             return
           }
           let historyOrder = doc.userOrderList.filter(it=>it.orderState=='已完成');
+          let start = order.pageSize * (order.currentPage-1);
+          let CompOrderOrder = historyOrder.slice(start,start+order.pageSize);
           res.json({
             status:"0",
             msg:'',
-            result:historyOrder
+            result:{
+              CompOrder : CompOrderOrder,
+              totalOrder : historyOrder.length
+            }
           }) 
       }              
   });
@@ -540,7 +609,7 @@ router.get('/deleteHistoryOrder', (req, res, next)=> {
 //用户消息  
 router.get('/userMessage', (req, res, next)=> {
   if(req.session.userId){
-      var Who = userGrade(req.session.grade);
+      let Who = userGrade(req.session.grade);
       Who.findOne({userId:req.session.userId},(err,doc)=>{
           if(err){
             errTip(res);
@@ -567,7 +636,7 @@ router.get('/userMessage', (req, res, next)=> {
 
 //用户读了消息  
 router.get('/readMessage', (req, res, next)=> {
-  var Who = userGrade(req.session.grade);
+  let Who = userGrade(req.session.grade);
   let title = req.query.title;
   Who.update({
         userId:req.session.userId,
@@ -592,7 +661,7 @@ router.get('/readMessage', (req, res, next)=> {
 
 //用户删除消息 
 router.get('/deleteMessage', (req, res, next)=> {
-  var Who = userGrade(req.session.grade);
+  let Who = userGrade(req.session.grade);
   let title = req.query.title;
   Who.update({
       userId:req.session.userId
