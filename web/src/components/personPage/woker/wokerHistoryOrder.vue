@@ -9,6 +9,17 @@
                 @deleteOrder='handleDeleteOrder'>
             </wokerOrderList>
         </div>
+        <div class="pageination-oder">
+            <el-pagination v-if="showPagination"
+                background
+                @current-change="handleCurrentChange"
+                :current-page="currentPage"
+                :pager-count="5"
+                :page-size="pageSize"
+                layout="total, prev, pager, next, jumper"
+                :total="totalOrder">
+            </el-pagination>
+        </div>
     </div>
 </template>
 
@@ -19,6 +30,10 @@ export default {
     data(){
         return {
             historyOrder:[],
+            currentPage : 1,
+            pageSize : 10,
+            totalOrder : 0,
+            showPagination : true,
             rightOptBtn:'historyBtn',// 'receiveOrderBtn'  // 'historyBtn'    
             titleList:[
                 {id:1,columnTitle:'完成时间',prop:'completedData',sortable:true},
@@ -38,11 +53,15 @@ export default {
     methods:{
         gehistoryOrderList(){
             let loading = this.$loading({lock:true,text:'玩命加载中...'});
-            axios.get(`/wokers/historyOrder`).then(response=>{
+            axios.get(`/wokers/historyOrder?size=${this.pageSize}&page=${this.currentPage}`).then(response=>{
                 let res = response.data;
                 loading.close();
                 if(res.status=='0'){
-                    this.historyOrder = res.result;
+                    this.historyOrder = res.result.historyOrder;
+                    this.totalOrder = Number.parseInt(res.result.totalOrder);
+                    if(this.totalOrder <= this.pageSize){
+                        this.showPagination = false
+                    }
                 }else{
                     console.log(res.msg);    
                 }
@@ -86,6 +105,10 @@ export default {
                     message: '已取消操作'
                  });          
             });      
+        },
+        handleCurrentChange(val) {
+            this.currentPage = val;
+            this.gehistoryOrderList();
         }
     }
 }

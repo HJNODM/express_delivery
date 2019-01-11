@@ -129,16 +129,15 @@ export default {
         userOrder:Array,
         rightOptBtn:String,
         titleList:{
-                id: Number ,
-                columnTitle: String,
-                prop: String,
-                sortable:Boolean
+            id: Number ,
+            columnTitle: String,
+            prop: String,
+            sortable:Boolean
         }
         
     },
     data(){
         return{
-            rightOptBtnType:this.rightOptBtn,
             tabletitleList:this.titleList,
             goodsSizeList:[
                 {text:'较小',value:'较小'},
@@ -160,6 +159,9 @@ export default {
                     || data.orderId.toString().includes(this.search)
                     || data.createOrderPeople.toString().includes(this.search)
                     || data.createOrderPeoplePhone.toString().includes(this.search));     
+        },
+        rightOptBtnType(){
+            return this.rightOptBtn
         }
     },
     methods:{
@@ -225,7 +227,7 @@ export default {
         font-size: 0;
     }
     .demo-table-expand label {
-        width: 4.5rem;
+        width: 6rem;
         color: #99a9bf;
     }
     .demo-table-expand .el-form-item {

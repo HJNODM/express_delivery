@@ -42,13 +42,13 @@ router.post('/cashWithDraw', (req, res, next)=> {
         WithDrawNum:req.body.WithDrawNum
     }
     Woker.findOne({userId:req.session.userId},(err,doc)=>{
-    if(err){
-        errTip(res);
-    }else{
-        if(!doc){
-            errTip(res,"用户不存在");
-            return 
+        if(err){
+            errTip(res);
         }else{
+            if(!doc){
+                errTip(res,"用户不存在");
+                return 
+            }
             if(param.alipayType=='支付宝'){
                 let flag =doc.alipayAccountzhiFuBao.every(it=>it.value!=param.alipayAccount);
                 flag && doc.alipayAccountzhiFuBao.push({value:param.alipayAccount});
@@ -58,13 +58,22 @@ router.post('/cashWithDraw', (req, res, next)=> {
             }
 
             if(param.WithDrawNum > doc.balance){
-                errTip(res,'提现金额大于余额!');
-            }else{
-                doc.balance -= Number.parseInt(param.WithDrawNum);
+                return errTip(res,'提现金额大于余额!');
             }
+
+            doc.balance -= Number.parseInt(param.WithDrawNum);
+            const handleTime = new Date().Format('yyyy-MM-dd hh:mm:ss');
+            const message = {
+                "title" : `用户申请提现(${handleTime})`,
+                "cont" : `您在${handleTime} 申请提现, 金额为${param.WithDrawNum} 元,
+                            提现方式为 ${param.alipayType} , 尾号为${param.alipayAccount.slice(-4)}的账户.
+                            24小时内到账, 如有疑问 请致电客服. 感谢您的使用,欢迎再次使用,祝您生活愉快!`, 
+                "sendTime" : handleTime
+                }
+            doc.messages.push(message);
             doc.save((err1,doc1)=>{
                 if(err1){
-                    errTip(res);
+                    errTip(res,'保存数据失败,请重试!');
                 }else{        
                     res.json({
                     status:"0",
@@ -72,9 +81,8 @@ router.post('/cashWithDraw', (req, res, next)=> {
                     result:''
                     }) ;
                 }              
-            });
-        }  
-    }
+            }); 
+        }
     });
 });
 
@@ -123,6 +131,11 @@ router.post('/receiveOrder', (req, res, next)=> {
                errTip(res,'用户不存在!');
                return
              }
+             let num = wokerdoc.wokerOrderList.filter(it=>it.orderState==='已接单');
+            if(num.length >= 3){
+                errTip(res,'已接订单过多! 请先完成订单后继续接单.');
+                return
+            }
              let receiveTime = new Date().Format('yyyy-MM-dd hh:mm:ss');
              param.orderState = '已接单';
              param.receivedDate = receiveTime;
@@ -183,7 +196,7 @@ router.post('/receiveOrder', (req, res, next)=> {
              res.json({
                status:"0",
                msg:'',
-               result:received
+               result : received
              }); 
          }              
      });
@@ -206,9 +219,10 @@ router.post('/receiveOrder', (req, res, next)=> {
              let sendTime = new Date().Format('yyyy-MM-dd hh:mm:ss');
              let message = {
                 "title" : `送单员申请完成订单(${sendTime})`,
-                "cont" : `送单员已经申请完成订单,您是否收到快递? 
-                          收到快递则可在 我的订单>>当前订单 选择确认送达.
-                          很高兴为您服务,欢迎再次使用`, 
+                "cont" : `您在${orderData.createTime} 发布的订单已完成配送,
+                          送单员 : ${orderData.createOrderPeople} , 电话:${orderData.createOrderPeoplePhone}
+                          订单号:${orderData.orderId} 已经申请完成订单,您是否收到快递? 收到快递则可在 
+                          我的订单>>当前订单 或者 查找订单 选择确认送达. 很高兴为您服务,欢迎再次使用`, 
                 "sendTime" : sendTime
              }
              doc.messages.push(message);
@@ -229,6 +243,10 @@ router.post('/receiveOrder', (req, res, next)=> {
 
  //历史订单 
  router.get('/historyOrder', (req, res, next)=> {
+    let order = {
+        currentPage : Number.parseInt(req.query.page),
+        pageSize : Number.parseInt(req.query.size)
+     }
     Woker.findOne({userId:req.session.userId},(err,doc)=>{
          if(err){
            errTip(res);
@@ -238,14 +256,39 @@ router.post('/receiveOrder', (req, res, next)=> {
                return
              }
              let history = doc.wokerOrderList.filter(it=>it.orderState=='已完成');
+             let start = order.pageSize * (order.currentPage-1);
+             let historyOrder = history.slice(start,start+order.pageSize);
              res.json({
                status:"0",
                msg:'',
-               result:history
+               result:{
+                    historyOrder : historyOrder,
+                    totalOrder : history.length
+               }
              }); 
          }              
      });
  });
+
+ //查找订单 
+ router.post('/searchOrder', (req, res, next)=> {
+    let orderId = req.body.answers;
+      Woker.findOne({userId:req.session.userId},(err,doc)=>{
+        if(err){
+          errTip(res);
+        }else{
+            if(!doc){
+              return errTip(res,"用户不存在!");
+            }
+            let findOrder = doc.wokerOrderList.filter(it=>it.orderId==orderId);
+            res.json({
+            status:"0",
+            msg:'',
+            result : findOrder
+            }) ;
+        }
+      });
+  });
 
  //历史订单中 删除订单 删除后不可恢复 deleteOrder
  router.post('/deleteHistoryOrder', (req, res, next)=> {

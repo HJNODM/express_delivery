@@ -21,16 +21,52 @@
                 </transition>
             </div>
         </div>
+        <transition name='transX'>
+            <div class="login-help-tip" 
+            @click="handleShowAccount"
+            v-if="showTips">
+                <div class="crile-tip">
+                    <p class="tips">测试账号</p>   
+                </div>
+            </div>
+        </transition>
+        <transition name='moveX'>
+            <div class="qq-call-me" v-if="showTips" key='bb'>
+                <a target="_blank" class="qq-link" href="http://wpa.qq.com/msgrd?v=3&uin=814233583&site=qq&menu=yes">
+                    <img class="qq" :src="img" alt="qq联系">
+                </a>
+            </div>
+        </transition>
     </div>
 </template>
 
 <script>
 export default {
+    data(){
+        return{
+            showTips : false,
+            img : './static/img/login-qq.png'
+        }
+    },
     methods:{
         goToHomePage(){
             this.$router.push({path:'/home'});
             
+        },
+        handleShowAccount(){
+            this.$notify({
+                message : '普通用户: 15279778477 </br> 工作人员: 15279778478 </br> 密码都是: 814233583 </br>请不要更改密码,非常感谢!',
+                dangerouslyUseHTMLString : true,
+                showClose : true,
+                type : "success",
+                duration : 0
+            })
         }
+    },
+    mounted() {
+        setTimeout(()=>{
+            this.showTips = true;
+        },500)
     }
 }
 </script>
@@ -131,6 +167,46 @@ export default {
             margin-right: 1.5rem;
         }
     }
+}
+.login-help-tip{
+    $tip-width : 5rem;
+    position: absolute;
+    top: 5%;
+    right: 5%;
+    width: $tip-width;
+    height: $tip-width /2;
+    cursor: pointer;
+    .crile-tip{
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: rgba(0,0,0,.1);
+        &:hover{
+          background-color: rgba(0,0,0,.2);
+        }
+        .tips{
+            font-size: 0.7rem;
+            letter-spacing: 0.1rem;
+            color: #d8d8d8;
+        }
+    }
+}
+.qq-call-me{
+    $qq-cont-width : 2rem;
+    position: absolute;
+    right: 1.5rem;
+    .qq-link{
+        display: block;
+        width: $qq-cont-width;
+        height: $qq-cont-width;
+        .qq{
+            width: 100%;
+            height: 100%;
+        }
+    }
+
 }
 @media only screen and (max-width:992px){
     .user-login-cont{

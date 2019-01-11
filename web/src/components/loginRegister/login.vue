@@ -95,9 +95,9 @@ export default {
                     { required: true, message: '请输入密码', trigger: 'blur' }
                 ],
                 validateCode:[
-                    // { required: true, message: '请输入验证码', trigger: 'blur' },
-                    // { validator: validateCode , trigger: 'blur'},
-                    // { validator: validateCode , trigger: 'change'}                   
+                    { required: true, message: '请输入验证码', trigger: 'blur' },
+                    { validator: validateCode , trigger: 'blur'},
+                    { validator: validateCode , trigger: 'change'}                   
                 ]
             },
             validateCodeImg:[
@@ -166,7 +166,7 @@ export default {
                     });
                 }
             }).catch(err=>{
-                console.log(err);               
+                //console.log(err);               
             }); 
         },
         submitForm(formName) {
@@ -185,7 +185,7 @@ export default {
                 };
                 this.userLogin('/users/login',userPost);
             } else {
-                console.log('error submit!!');
+               // console.log('error submit!!');
                 return false;
             }
         });

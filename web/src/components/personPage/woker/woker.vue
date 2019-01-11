@@ -45,7 +45,8 @@ export default {
                     title:'我的订单',
                     menuItem:[
                         {route:'wokerReceivedOrder',listTitle:'已接订单'},
-                        {route:'wokerHistoryOrder',listTitle:'历史订单'}
+                        {route:'wokerHistoryOrder',listTitle:'历史订单'},
+                        {route:'wokerFindOrder',listTitle:'查找订单'}
                     ]
                 },
                 {

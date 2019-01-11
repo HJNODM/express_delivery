@@ -69,7 +69,7 @@
     :prop="item.prop">
     </el-table-column>
     <el-table-column  align="right">
-         <template slot="header" cope="scope">
+         <template slot="header" slot-scope="scope">
             <el-input
             v-model="search"
             size="mini"

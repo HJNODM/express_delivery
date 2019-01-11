@@ -218,7 +218,7 @@ router.post('/forgotPassWord', (req, res, next)=> {
         errTip(res);
       }else{
           if(!doc){
-            errTip(res,'用户不存在');
+            errTip(res,'用户不存在,或者密保错误!');
             return
           }
           res.json({
@@ -519,7 +519,7 @@ router.post('/completedCurrentOrder', (req, res, next)=> {
                           });
                           let message ={
                               "title" : `用户完成订单,收益到账(${compOrderTime})`, 
-                              "cont" : `您在 ${orderData.receivedDate} 接收的订单已完成,
+                              "cont" : `您在 ${orderData.receivedDate} 接收的订单(订单号: ${orderData.orderId})已完成,
                               用户已确认收货,收益+ ${orderData.Price} 元, 可在 个人中心>>我的钱包中查收.
                               感谢您的付出,您辛苦了! 祝您生活愉快!`, 
                               "sendTime" : compOrderTime
@@ -608,6 +608,10 @@ router.get('/deleteHistoryOrder', (req, res, next)=> {
 
 //用户消息  
 router.get('/userMessage', (req, res, next)=> {
+  let msg = {
+      currentPage : Number.parseInt(req.query.page) ,
+      pageSize : Number.parseInt(req.query.size) 
+  }
   if(req.session.userId){
       let Who = userGrade(req.session.grade);
       Who.findOne({userId:req.session.userId},(err,doc)=>{
@@ -618,10 +622,17 @@ router.get('/userMessage', (req, res, next)=> {
                 errTip(res,'用户不存在');
                 return
               }
+              let userMessage = doc.messages.reverse();
+              let start = msg.pageSize * (msg.currentPage-1);
+              let currentMsg = userMessage.slice(start,start+msg.pageSize);
+              const retmsg = msg.pageSize ? currentMsg : userMessage;
               res.json({
                 status:"0",
                 msg:'',
-                result:doc.messages.reverse()
+                result:{
+                  userMessage : retmsg,
+                  totalOrder : userMessage.length
+                }
               }) 
           }              
       });

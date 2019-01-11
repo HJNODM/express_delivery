@@ -6,10 +6,10 @@ import {loginRegister ,login ,register ,forgotPassword ,changePassword,
   appHeader ,appHome ,aboutUs ,customerService ,suggest ,notFound} from './publicRouter'
 
 import {userPage ,userInformation ,addInformation ,
-  currentOrder ,joinUs ,newOrder ,historyOrder ,myMessage ,findOrder} from './userRouter'
+  currentOrder ,joinUs ,newOrder ,historyOrder ,myMessage ,userFindOrder} from './userRouter'
 
 import {wokerPage ,wokerAccount ,wokerReceivedOrder ,
-  wokerHistoryOrder ,allUserOrderList } from './wokerRouter'
+  wokerHistoryOrder ,allUserOrderList ,wokerFindOrder} from './wokerRouter'
 
 import {adminLogin ,adminPage ,findPeople ,allUser ,allWoker ,findOneOrder ,allNotReceiveOrder ,
   allReceivedOrder ,allHistoryOrder ,sendMessage ,joinUsApply ,joinUsHistoryApply ,suggestList} from './adminRouter'
@@ -123,8 +123,8 @@ export default new Router({
           component:historyOrder
         },
         {
-          path:'findOrder',
-          component:findOrder
+          path:'userFindOrder',
+          component:userFindOrder
         },
         {
           path:'myMessage',
@@ -162,10 +162,14 @@ export default new Router({
         {
           path:'wokerReceivedOrder',
           component:wokerReceivedOrder  
-        },
+        }, 
         {
           path:'wokerHistoryOrder',
           component:wokerHistoryOrder  
+        },
+        {
+          path:'wokerFindOrder',
+          component:wokerFindOrder  
         },
         {
           path:'allUserOrderList',

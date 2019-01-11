@@ -54,7 +54,7 @@ export default {
                         {route:'currentOrder',listTitle:'当前订单'},
                         {route:'newOrder',listTitle:'发布订单'},
                         {route:'historyOrder',listTitle:'历史订单'},
-                        {route:'findOrder',listTitle:'查找订单'}
+                        {route:'userFindOrder',listTitle:'查找订单'}
                     ]
                 },
                 {

@@ -108,7 +108,7 @@ export default {
         },
         handleCurrentChange(val) {
             this.currentPage = val;
-            this.getUserOrder();
+            this.getHistoryOrder();
         }
     }
 }
