@@ -2,14 +2,14 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 //异步路由
-import {loginRegister ,login ,register ,forgotPassword ,
-  appHeader ,appHome ,aboutUs ,customerService ,suggest } from './publicRouter'
+import {loginRegister ,login ,register ,forgotPassword ,changePassword,
+  appHeader ,appHome ,aboutUs ,customerService ,suggest ,notFound} from './publicRouter'
 
 import {userPage ,userInformation ,addInformation ,
-  currentOrder ,joinUs ,newOrder ,historyOrder ,myMessage } from './userRouter'
+  currentOrder ,joinUs ,newOrder ,historyOrder ,myMessage ,userFindOrder} from './userRouter'
 
 import {wokerPage ,wokerAccount ,wokerReceivedOrder ,
-  wokerHistoryOrder ,allUserOrderList } from './wokerRouter'
+  wokerHistoryOrder ,allUserOrderList ,wokerFindOrder} from './wokerRouter'
 
 import {adminLogin ,adminPage ,findPeople ,allUser ,allWoker ,findOneOrder ,allNotReceiveOrder ,
   allReceivedOrder ,allHistoryOrder ,sendMessage ,joinUsApply ,joinUsHistoryApply ,suggestList} from './adminRouter'
@@ -101,7 +101,11 @@ export default new Router({
         },
         {
           path:'addInformation',
-          component:addInformation 
+          component:addInformation  
+        },
+        {
+          path:'changePassword',
+          component:changePassword
         },
         {
           path:'currentOrder',
@@ -109,11 +113,18 @@ export default new Router({
         },
         {
           path:'newOrder',
-          component:newOrder
+          component:newOrder,
+          meta: {
+            keepAlive: true 
+          } 
         },
         {
           path:'historyOrder',
           component:historyOrder
+        },
+        {
+          path:'userFindOrder',
+          component:userFindOrder
         },
         {
           path:'myMessage',
@@ -141,16 +152,24 @@ export default new Router({
           component:userInformation  
         },
         {
+          path:'changePassword',
+          component:changePassword 
+        },
+        {
           path:'wokerAccount',
           component:wokerAccount  
         },
         {
           path:'wokerReceivedOrder',
           component:wokerReceivedOrder  
-        },
+        }, 
         {
           path:'wokerHistoryOrder',
           component:wokerHistoryOrder  
+        },
+        {
+          path:'wokerFindOrder',
+          component:wokerFindOrder  
         },
         {
           path:'allUserOrderList',
@@ -243,6 +262,11 @@ export default new Router({
         default:suggest,
         header:appHeader
       }
+    },
+    {
+      path: '*',
+      name:'notFound',
+      component:notFound
     }
   ]
 })

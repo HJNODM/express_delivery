@@ -139,6 +139,14 @@ export default {
     created() {
         this.handleIsCompInfo();
     },
+    mounted() {
+        window.onkeydown = (e)=>{
+            let key = window.event.keyCode;
+            if(key==13){
+                this.submitForm('newOrder');
+            }
+        }
+    },
     methods: {
         //如果没有完善个人信息不可以发布订单
         handleIsCompInfo(){
@@ -239,6 +247,11 @@ export default {
     padding-top: 2rem;
     width: 40%;
     min-width: 20rem;
+}
+@media only screen and (max-width:1650px){
+    .newOrder .el-form--label-left .el-form-item__label{
+        width: 10rem !important;
+    }
 }
 @media only screen and (max-width:768px){
     .createNewOrder{

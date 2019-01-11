@@ -88,7 +88,7 @@ export default {
             axios.get('/users/userMessage').then(response=>{
                 let res = response.data;
                 if(res.status=='0'){
-                    let msg = res.result.filter(it=>!it.isRead);
+                    let msg = res.result.userMessage.filter(it=>!it.isRead);
                     this.$store.commit("saveUserInfo",{msgLen:msg.length});
                     if(msg.length){
                         this.$notify({
@@ -103,7 +103,7 @@ export default {
                 // console.log(res.msg);
                 }
             }).catch(err=>{
-                console.log(res.msg);
+                console.log(err);
             })
         },
         checkLogin(){

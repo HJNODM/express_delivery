@@ -4,7 +4,7 @@ var mongoose = require('mongoose'),
 /**
  * 连接
  */
-mongoose.connect(DB_URL);
+mongoose.connect(DB_URL,{ useNewUrlParser: true });
 
 /**
   * 连接成功

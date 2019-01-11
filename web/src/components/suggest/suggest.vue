@@ -87,6 +87,7 @@ export default {
     position: relative;
     width: 100%;
     background-color: #f7f7f7;
+    min-height: 100vh;
 } 
 
 </style>

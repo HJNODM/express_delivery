@@ -77,6 +77,12 @@ export default {
         },
         showComponent(target){
             this.shwoCompts=target;
+        },
+        changScreen(){
+          const screenWidth = window.innerWidth ||document.documentElement.clientWidth;
+          const percent = (screenWidth / 1920 * 125);
+          let fontSize = percent.toFixed(3) +'';
+          return fontSize
         }   
     },
     created() {
@@ -91,6 +97,15 @@ export default {
           },500);
         }
     },
+    mounted() {
+      let fontSize = this.changScreen();
+      const html = document.getElementById('html');
+      html.style.fontSize = fontSize +'%';
+      window.addEventListener("resize", ()=> {
+        fontSize = this.changScreen();
+        html.style.fontSize = fontSize +'%';
+      }, false);
+    }
 }
 </script>
 
@@ -159,47 +174,47 @@ p::selection{
 .router-leave-active{
   @include transition(.3s); 
 }
-@media only screen and (max-width:1750px){
-    html{
-      font-size: 114%;
-    }
-}
-@media only screen and (max-width:1550px){
-    html{
-      font-size: 100.91%;
-    }
-}
-@media only screen and (max-width:1400px){
-    html{
-      font-size: 91.14%;
-    }
-}
-@media only screen and (max-width:1200px){
-    html{
-      font-size: 78.12%;
-    }
-}
+// @media only screen and (max-width:1750px){
+//     html{
+//       font-size: 114%;
+//     }
+// }
+// @media only screen and (max-width:1550px){
+//     html{
+//       font-size: 100.91%;
+//     }
+// }
+// @media only screen and (max-width:1400px){
+//     html{
+//       font-size: 91.14%;
+//     }
+// }
+// @media only screen and (max-width:1200px){
+//     html{
+//       font-size: 78.12%;
+//     }
+// }
 @media only screen and (max-width:992px){
-    html{
-      font-size: 64.58%;
-    }
+    // html{
+    //   font-size: 64.58%;
+    // }
     .mgtop{
       @include translateY(-4.1rem);
     }
 }
-@media only screen and (max-width:768px){
-    html{
-      font-size: 50%;
-    }
-}
-@media only screen and (max-width:640px){
-    html{
-      font-size: 32.55%;
-    }
-}
-@media only screen and (max-width:440px){
-    html{
-      font-size: 22.92%;
-    }
-}
+// @media only screen and (max-width:768px){
+//     html{
+//       font-size: 50%;
+//     }
+// }
+// @media only screen and (max-width:640px){
+//     html{
+//       font-size: 32.55%;
+//     }
+// }
+// @media only screen and (max-width:440px){
+//     html{
+//       font-size: 22.92%;
+//     }
+// }
 </style>

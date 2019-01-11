@@ -24,4 +24,9 @@ export default {
     left: 0;
     background-color:darken(#f7f7f7,1%);
 }
+@media only screen and (max-width:1200px){
+    .app-footer{
+        margin-top: 15rem;
+    }
+}
 </style>

@@ -51,8 +51,7 @@ export default {
 .server-callUs{
     position: relative;   
     width: 90%;
-    margin: 0 auto;
-    margin-top: 1rem;
+    margin: 1rem auto 5rem;
     background-color: #fff;   
     cursor: pointer;
     h4{

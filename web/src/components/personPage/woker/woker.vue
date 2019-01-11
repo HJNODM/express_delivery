@@ -8,7 +8,7 @@
             </div>
             <div class="woker-router-cont"
             :class="{'isCollapse-w':isCollapse}">
-                <transition name='opa-mini'>
+                <transition name='opa-mini' mode='out-in'>
                     <router-view></router-view>
                 </transition> 
             </div>
@@ -35,6 +35,7 @@ export default {
                     title:'个人中心',
                     menuItem:[
                         {route:'userInformation',listTitle:'我的信息'},
+                         {route:'changePassword',listTitle:'修改密码'},
                         {route:'wokerAccount',listTitle:'我的钱包'}
                     ]
                 },
@@ -44,7 +45,8 @@ export default {
                     title:'我的订单',
                     menuItem:[
                         {route:'wokerReceivedOrder',listTitle:'已接订单'},
-                        {route:'wokerHistoryOrder',listTitle:'历史订单'}
+                        {route:'wokerHistoryOrder',listTitle:'历史订单'},
+                        {route:'wokerFindOrder',listTitle:'查找订单'}
                     ]
                 },
                 {
@@ -76,8 +78,15 @@ export default {
             axios.get("/users/checkLogin").then((response)=>{
                     let res = response.data;
                     loading.close();
-                    if(res.status=="0"){
-
+                    if(res.status==="0"){
+                        if(Number.parseInt(res.result.grade) !==1){
+                            this.$message({
+                                message: '用户权限不够!',
+                                type: 'error',
+                                showClose:true
+                            });
+                            this.$router.push({ path: '/person' });
+                        }
                     }else{
                         this.$message({
                             message: '当前未登录!',
@@ -102,6 +111,7 @@ export default {
 .person-woker-page{
     position: relative;
     width: 100%;
+    min-height: 100vh;
     background-color: #f7f7f7;
 }
 .person-woker-body{
@@ -114,6 +124,7 @@ export default {
     background-color: #fff;
 }
 .woker-router-cont{
+    position: relative;
     width: 100%;
     min-height: 35rem;
     width:  calc(100% - 10.1rem);
@@ -122,13 +133,24 @@ export default {
     border-top: none;
     transition: all .5s;
     background-color: #f4f9fd;
+    padding-bottom: 3rem;
 }
 .isCollapse-w{
     width:  calc(100% - 3.3rem);
 }
+.pageination-oder{  //订单页中的分页样式
+    position: absolute;
+    bottom: 0.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: 2rem;
+}
 @media only screen and (max-width:1200px){
     .person-woker-body{
         width: 90%;
+    }
+    .woker-router-cont{
+        min-height: 45rem;
     }
 }
 @media only screen and (max-width:992px){

@@ -9,6 +9,17 @@
                 @DeleteOrder='handleDelete'>
                 </userOrderList>
          </div>
+         <div class="pageination-oder">
+            <el-pagination v-if="showPagination"
+                background
+                @current-change="handleCurrentChange"
+                :current-page="currentPage"
+                :pager-count="5"
+                :page-size="pageSize"
+                layout="total, prev, pager, next, jumper"
+                :total="totalOrder">
+            </el-pagination>
+        </div>
     </div>
 </template>
 
@@ -19,6 +30,10 @@ export default {
         data(){
         return {
             CompOrder:[],
+            currentPage : 1,
+            pageSize : 8,
+            totalOrder : 0,
+            showPagination : true,
             listType:{
                 noCompBtn:false
             },
@@ -38,11 +53,15 @@ export default {
     methods:{
         getHistoryOrder(){
             let loading = this.$loading({lock:true,text:'正在加载...'});
-            axios.get('/users/historyOrder').then(response=>{
+            axios.get(`/users/historyOrder?size=${this.pageSize}&page=${this.currentPage}`).then(response=>{
                 let res = response.data;
                 loading.close();
                 if(res.status=='0'){
-                    this.CompOrder = res.result;
+                    this.CompOrder = res.result.CompOrder;
+                    this.totalOrder = Number.parseInt(res.result.totalOrder);
+                    if(this.totalOrder <= this.pageSize){
+                        this.showPagination = false
+                    }
                 }else{
                     console.log(res.msg);    
                 }
@@ -66,6 +85,10 @@ export default {
                             type: 'success',
                             message: '删除成功!'
                         });
+                        let mode = this.totalOrder % this.pageSize; 
+                        if(mode ===1){ //判断是否当页最后一条
+                            this.currentPage --;
+                        } 
                         this.getHistoryOrder();
                     }else{
                         this.$message({
@@ -82,6 +105,10 @@ export default {
                     message: '已取消删除'
                  });          
             });  
+        },
+        handleCurrentChange(val) {
+            this.currentPage = val;
+            this.getHistoryOrder();
         }
     }
 }

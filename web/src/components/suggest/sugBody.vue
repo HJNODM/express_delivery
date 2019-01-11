@@ -67,7 +67,7 @@ $text-color:#777;
 }
 .hiden-h{
     height: 2.5rem;
-    margin-bottom: 32rem;
+    margin-bottom: 10rem + 24.5rem - 2.5rem;
 }
 .sug-cont-body{
     padding: 2rem 1rem;
@@ -145,5 +145,14 @@ $text-color:#777;
             background-image: linear-gradient(to bottom, #41c1ec 0%, #5a74cf 100%);
         }
     }
+}
+@media only screen and (max-width:1200px){
+     .suggest-cont{
+        margin-bottom: 25rem;
+    }
+    .hiden-h{
+        margin-bottom: 32rem + 15rem;
+    }
+   
 }
 </style>

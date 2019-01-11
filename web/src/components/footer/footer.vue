@@ -60,13 +60,7 @@ export default {
 }
 </script>
 
-<style lang='scss' scoped>
-span::selection,
-h5::selection,
-a::selection{
-            background-color:#93C; 
-            color:#FCF;
-}  
+<style lang='scss' scoped> 
 .footer{
     position: relative;
     display: flex;
