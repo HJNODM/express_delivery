@@ -622,16 +622,18 @@ router.get('/userMessage', (req, res, next)=> {
                 errTip(res,'用户不存在');
                 return
               }
-              let userMessage = doc.messages.reverse();
-              let start = msg.pageSize * (msg.currentPage-1);
-              let currentMsg = userMessage.slice(start,start+msg.pageSize);
+              const userMessage = doc.messages.reverse();
+              const notRead = userMessage.filter(it=>!it.isRead);
+              const start = msg.pageSize * (msg.currentPage-1);
+              const currentMsg = userMessage.slice(start,start+msg.pageSize);
               const retmsg = msg.pageSize ? currentMsg : userMessage;
               res.json({
                 status:"0",
                 msg:'',
                 result:{
                   userMessage : retmsg,
-                  totalOrder : userMessage.length
+                  totalOrder : userMessage.length,
+                  notRead : notRead.length
                 }
               }) 
           }              

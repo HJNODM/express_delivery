@@ -72,8 +72,8 @@ export default {
                     if(this.totalOrder <= this.pageSize){
                         this.showPagination = false
                     }
-                    let notReadMsg= this.userMessage.filter(it=>!it.isRead);
-                    if(!notReadMsg.length){
+                    let notReadMsg = res.result.notRead;
+                    if(!notReadMsg){
                         this.$store.commit("saveUserInfo",{msgLen:notReadMsg .length});
                     }
                 }else{
