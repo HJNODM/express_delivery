@@ -1,4 +1,5 @@
-<!DOCTYPE html><html id=html><head><meta charset=utf-8><meta name=Author content=波哥无敌><meta http-equiv=X-UA-Compatible content="IE=edge,chrome=1"><meta name=keywords content="快递 快递代拿 校园 帮拿快递 懒人校园"><meta name=Description content="校园闪电侠 快递代拿系统 在寝室坐着,网上轻松下单,快递到手,懒人首选."><meta name=viewport content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"><link rel="shortcut icon" href=./static/img/logo.ico><title>校园闪电侠 -- 快递代拿系统</title><style>#app-loading-first{
+<!DOCTYPE html><html id=html><head><meta charset=utf-8><meta name=Author content=波哥无敌><meta http-equiv=X-UA-Compatible content="IE=edge,chrome=1"><meta name=keywords content="快递 快递代拿 校园 帮拿快递 懒人校园"><meta name=Description content="校园闪电侠 快递代拿系统 在寝室坐着,网上轻松下单,快递到手,懒人首选."><meta name=viewport content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"><link rel="shortcut icon" href=./static/img/logo.ico><title>校园闪电侠 -- 快递代拿系统</title><style>#app-loading-first,
+    .if-use-ie{
       position: fixed;
       top: 0;
       bottom: 0;
@@ -7,6 +8,9 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      width: 100%;
+      height: 100%;
+      background-color: #eaeaea;
     }
     .loading-first-cont{
       position: relative;
@@ -19,4 +23,46 @@
     }
     .loading-first-cont .tips{
       margin: 2rem auto 0;
-    }</style><link href=./static/css/app.1838ff0deb1ba4261b610ef5f9cd6e3b.css rel=stylesheet></head><body><div id=app-loading-first><div class=loading-first-cont><img class=loading-img src=./static/img/loading.gif alt=加载中...></div></div><div id=app></div><script type=text/javascript src=./static/js/manifest.365ee103ac5d4c39743f.js></script><script type=text/javascript src=./static/js/vendor.0039b4df2b66f37ce7b4.js></script><script type=text/javascript src=./static/js/app.b6c132dd465fde3ce52b.js></script></body></html>
+    }
+    .if-use-ie{
+      display: block;
+      z-index: 9999;
+    }
+    .if-use-ie.hidden{
+      display: none;
+    }
+    .suggest-use-chrome{
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 400px;
+      height: 200px;
+      margin-top: -100px;
+      margin-left: -200px;
+      border: 1px solid #ccc;
+      border-top: 10px solid #c81331;
+      background-color: #fff;
+    }
+    .suggest-use-chrome .tips{
+      width: 100%;
+      text-align: center;
+    }
+    .suggest-use-chrome .chrome-link{
+      display: block;
+      width: 100%;
+      text-align: center;
+    }
+    .suggest-use-chrome .chrome-btn{
+        width: 100px;
+        height: 40px;
+        line-height: 40px;
+        background-color: #c81331;
+        border: none;
+        margin: 50px auto 0;
+        font-size: 14px;
+        color: #fff;
+    }</style><link href=./static/css/app.59b9dc1a681fb7069653652dc013c789.css rel=stylesheet></head><body><div id=app-loading-first><div class=loading-first-cont><img class=loading-img src=./static/img/loading.gif alt=加载中...></div></div><div class="if-use-ie hidden"><div class=suggest-use-chrome><p class=tips>检测到您的浏览器为IE , 建议使用Chrome 谷歌浏览器</p><a target=_blank href=https://www.google.cn/intl/zh-CN/chrome class=chrome-link><button class=chrome-btn>谷歌 Chrome</button></a></div></div><div id=app></div><script type=text/javascript src=./static/js/manifest.365ee103ac5d4c39743f.js></script><script type=text/javascript src=./static/js/vendor.0039b4df2b66f37ce7b4.js></script><script type=text/javascript src=./static/js/app.776ead4a3b74f4a88749.js></script></body><script>if (!!window.ActiveXObject || "ActiveXObject" in window){
+        setTimeout(function(){
+          document.getElementsByClassName("if-use-ie")[0].style.display="block";
+        },200)
+    }</script></html>

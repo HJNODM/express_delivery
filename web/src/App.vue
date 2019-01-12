@@ -40,7 +40,8 @@ export default {
         //进度条
         percentage:0,
         showGoTop:false,
-        shwoCompts:[]
+        shwoCompts:[],
+        lastScrollTop : 0
       }
     },
     name: 'App',
@@ -50,9 +51,9 @@ export default {
       goToTop
     },
     methods:{
-        handleScroll(vertical) {
+        handleScroll(vertical) { 
           vertical.process && (this.percentage=Number.parseInt(vertical.process *100));
-          if(vertical.directionY=='down'){
+          if(vertical.scrollTop > this.lastScrollTop){
                 this.hiddenHeader=true; 
                 this.showGoTop = true;
           }else{
@@ -61,6 +62,7 @@ export default {
           if(vertical.scrollTop==0){
                this.showGoTop = false;
           }
+          this.lastScrollTop = vertical.scrollTop;
           for(let i =0; i <this.shwoCompts.length ;i++){
               if(getElementTop(this.shwoCompts[i].$el) < vertical.scrollTop + 450){
                   this.shwoCompts[i].$data.isCmptShow =true;    
@@ -99,11 +101,16 @@ export default {
     },
     mounted() {
       let fontSize = this.changScreen();
+      let timer = null;
       const html = document.getElementById('html');
       html.style.fontSize = fontSize +'%';
+
       window.addEventListener("resize", ()=> {
-        fontSize = this.changScreen();
-        html.style.fontSize = fontSize +'%';
+        if(timer){ clearTimeout(timer); }
+        timer = setTimeout(()=>{
+            fontSize = this.changScreen();
+            html.style.fontSize = fontSize +'%';
+        },100);
       }, false);
     }
 }
@@ -119,7 +126,7 @@ html{
 }
 body{
   font-size: 0.7rem;
-  overflow: hidden;
+  overflow: hidden; 
   //background-color: #f7f7f7;
 }
 a{

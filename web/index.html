@@ -10,7 +10,8 @@
     <link rel="shortcut icon" href="./static/img/logo.ico"/>
     <title>校园闪电侠 -- 快递代拿系统</title>
     <style>
-    #app-loading-first{
+    #app-loading-first,
+    .if-use-ie{
       position: fixed;
       top: 0;
       bottom: 0;
@@ -19,6 +20,9 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      width: 100%;
+      height: 100%;
+      background-color: #eaeaea;
     }
     .loading-first-cont{
       position: relative;
@@ -32,7 +36,46 @@
     .loading-first-cont .tips{
       margin: 2rem auto 0;
     }
+    .if-use-ie{
+      display: block;
+      z-index: 9999;
+    }
+    .if-use-ie.hidden{
+      display: none;
+    }
+    .suggest-use-chrome{
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 400px;
+      height: 200px;
+      margin-top: -100px;
+      margin-left: -200px;
+      border: 1px solid #ccc;
+      border-top: 10px solid #c81331;
+      background-color: #fff;
+    }
+    .suggest-use-chrome .tips{
+      width: 100%;
+      text-align: center;
+    }
+    .suggest-use-chrome .chrome-link{
+      display: block;
+      width: 100%;
+      text-align: center;
+    }
+    .suggest-use-chrome .chrome-btn{
+        width: 100px;
+        height: 40px;
+        line-height: 40px;
+        background-color: #c81331;
+        border: none;
+        margin: 50px auto 0;
+        font-size: 14px;
+        color: #fff;
+    }
     </style>
+    
   </head>
   <body>
     <div id="app-loading-first">
@@ -40,6 +83,23 @@
         <img class="loading-img" src="./static/img/loading.gif" alt="加载中...">
       </div>
     </div>
+    <div class="if-use-ie hidden">
+      <div class="suggest-use-chrome">
+        <p class="tips">检测到您的浏览器为IE , 建议使用Chrome 谷歌浏览器</p>
+        <a target="_blank" href="https://www.google.cn/intl/zh-CN/chrome" class="chrome-link">
+          <button class="chrome-btn">谷歌 Chrome</button>
+        </a>
+      </div>
+    </div>
+
     <div id="app"></div>
+
   </body>
+  <script>
+    if (!!window.ActiveXObject || "ActiveXObject" in window){
+        setTimeout(function(){
+          document.getElementsByClassName("if-use-ie")[0].style.display="block";
+        },200)
+    }
+  </script>
 </html>
