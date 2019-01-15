@@ -70,6 +70,7 @@ export default {
   data(){
         let validateCode =(rule, value, callback) => {
             if (this.randomCode!=this.$data.loginForm.validateCode) {
+                  this.handlechangeImg();
                   callback(new Error('验证码不正确 !'));
             }else{
                  callback();
@@ -96,8 +97,7 @@ export default {
                 ],
                 validateCode:[
                     { required: true, message: '请输入验证码', trigger: 'blur' },
-                    { validator: validateCode , trigger: 'blur'},
-                    { validator: validateCode , trigger: 'change'}                   
+                    { validator: validateCode , trigger: 'blur'}                 
                 ]
             },
             validateCodeImg:[
@@ -116,8 +116,7 @@ export default {
         }
     },
     mounted() {
-        this.randomCode=this.randomNum();
-        this.codeImg=this.randomCodeimg();
+        this.handlechangeImg();
         window.onkeydown = (e)=>{
             let key = window.event.keyCode;
             if(key==13){
@@ -143,8 +142,8 @@ export default {
             this.inputType=(this.inputType=='password')?'text':'password';
         },
         handlechangeImg(){
-            this.codeImg=this.randomCodeimg();
             this.randomCode=this.randomNum();
+            this.codeImg=this.randomCodeimg();
         },
         userLogin(router,data){
             axios.post(router,data).then(response=>{

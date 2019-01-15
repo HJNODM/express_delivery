@@ -34,10 +34,13 @@ const webpackConfig = merge(baseWebpackConfig, {
     new webpack.DefinePlugin({
       'process.env': env
     }),
-    new UglifyJsPlugin({
+    new UglifyJsPlugin({ //去掉注释 console 代码混淆
       uglifyOptions: {
         compress: {
-          warnings: false
+          warnings: false,
+          drop_debugger: true,
+          drop_console: true,
+          pure_funcs: ['console.log']
         }
       },
       sourceMap: config.build.productionSourceMap,
